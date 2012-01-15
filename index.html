@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>sortByRBT</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script type="text/javascript" src="sortByRBT.js" charset="UTF-8"></script>
+         <script src="3rd-party/jQuery/jquery.min.js"> </script>
+
+		<script type="text/javascript" charset="UTF-8">
+		 $(document).ready(function(){
+			var $s = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789";
+			function makeid($n,random){
+				var $r = "";
+				while($n--)
+					$r += $s.charAt(Math.floor(Math.random() * $s.length));
+				return $r;
+			}
+			$('#go').click(function(){
+				var $n = $('#lenght').val();
+				var $v = [];
+				var $u = [];
+				for (var $i = 0; $i < $n; $i++){ //randomize de indexes
+					$u[$i] = $v[$i] = {
+						n: $i,
+						v: makeid($('#size').val())
+					};
+				}
+				function f($i,$j){
+					//$i.v.match(/x[^a]+/gi);
+					return $i.v > $j.v ? 1 : $i.v < $j.v ? -1 : 0
+				}
+				var $t0 = new Date;
+				$u.sort(f);
+				var $dt = new Date - $t0;
+				console.log($dt);
+				var $r = $('#result');
+				$r.html('<div>Browser sort '+ $n + ' elements in ' + $dt +' miliseconds</div>');
+				var $t0 = new Date;
+				$v = $sortByRBT($v,f);
+				var $dt = new Date - $t0;
+				$r.append('<div>sortByRBT sort '+ $n + ' elements in ' + $dt +' miliseconds</div>');
+				if($('#show:checked').val() == 'Yes'){
+					for (var $i = 0; $i < $n; $i++){
+						$r.append('<div>a)' + $v[$i].v + '<br/>b)' + $u[$i].v + '</div>');
+					}
+				}
+			});
+		 });
+		</script>
+		<style type="text/css">
+			html, body{
+				margin:0px;
+				padding:0px;
+				width:100%;
+				height:100%;
+				background-color:black;
+				color:white;
+				border-width:0px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id = "contentor" class="init">
+			<div id="Wellcome">Comparision of builtin sort with sortByRBT for an array of (long) strings</div>
+			<div>String size: <input type="size" id="size" value="4096"></input></div>
+			<div>Array size<input type="number" id="lenght" value="512"></input></div>
+			<input type="button" id="go" value="GO"></input>
+			<input type="checkbox" value="Yes" id="show"></input>Show ordered values
+			<div id="result"></div>	
+		</div>		
+	</body>
+</html>
